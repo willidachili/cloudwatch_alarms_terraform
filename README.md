@@ -241,16 +241,15 @@ curl --location --request POST 'http://localhost:8080/account' \
 * Få balansen i banken tilbake til 0 
 * Se at alarmen sin tilstand går vekk fra ```IN_ALARM``` . 
 
-## Terraform pipeline i GitHub actions 
+## GitHub actions Workflow for å kjøre Terraform. 
 
-Basert på for eksempel denne labben https://github.com/glennbechdevops/terraform-app-runner - lag en GitHub actions pipeline 
-for terraformkoden i dette repositoryet slik at 
+Basert på for eksempel denne labben https://github.com/glennbechdevops/terraform-app-runner - lag en GitHub actions workflow fil 
+for Terraform-koden i dette repositoryet slik at 
 
 * Hver commit på main branch kjører Terraform-apply
 * For en Pull request, gjør bare Terraform plan 
 
 Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform!
-
 
 ## Ekstrapppgaver
 
