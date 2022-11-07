@@ -179,7 +179,10 @@ Dette kan vi gjøre ved å lage en CloudWatch alarm.
 Hvis noe skal skje når en alarm løses ut, kan vi få den til å sende en meldng til en SNS topic.
 Vi kan så lage en "subscription" på denne Topicen som får meldinger som sendes til den. 
 
-Lag en ny terraform fil i samme katalog som de andre med følgende innhold. Husk å endre på e-postaddressen 
+Lag en ny terraform fil i samme katalog som de andre med følgende innhold. 
+
+*Husk å endre på e-postaddressen* til din egen! 
+
 Du kan kalle filen hva du vil, Husk at terraform prosesserer alle ```*.tf``` filer i katalogen du starter i - uavhengig av filnavn
 
 ```hcl
@@ -220,6 +223,20 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
 * ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner. 
 * ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening  
 * Legg merke til hvordan en ````resource``` refererer til en annen i Terraform!
+
+
+### Bekreft Epost
+
+For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen din.
+
+![Alt text](img/sns.png  "a title")
+
+* Gå til AWS console
+* Gå til SNS
+* Fra venstremenyen velg "Topics"
+* Finn din egen Topic 
+* Under Subscriptions, finn epost-linjen, og velg "Request Confirmation" - sjekk eposten din, du skal ha fått en epost med en bekreftelseslenke.
+* Test å sende en mail, ved å trykke "Publish message" øverst til høyre på siden 
 
 
 ### Løs ut alarmen! 
