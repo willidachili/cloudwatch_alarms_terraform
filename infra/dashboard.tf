@@ -25,7 +25,7 @@ resource "aws_cloudwatch_dashboard" "main" {
  {
       "type": "metric",
       "x": 0,
-  x     "y": 1,
+       "y": 1,
       "width": 12,
       "height": 6,
       "properties": {
