@@ -1,9 +1,10 @@
 # Metrics og Alarmer med Spring Boot og CloudWatch + Terraform
 
 I denne øvingen skal dere bli ennå bedre kjent med hvordan man instrumenterer en Spring Boot applikasjon med Metrics. 
+Første delen av øvingen er lik https://github.com/glennbechdevops/cloudwatch_alarms_terraform - se på det som 
+repetisjon :) 
 
-* Vi skal også se på hvordan vi kan visualisere Metrics i AWS CloudWatch, og hvordan vi kan bruke terraform til å lage 
-et dashboard i tjenesten CloudWatch 
+* Vi skal også se på hvordan vi kan visualisere Metrics i AWS CloudWatch, og hvordan vi kan bruke terraform til å lage et dashboard i tjenesten CloudWatch 
 * Vi få GitHub Actions til å kjøre terraform for oss 
 * Vi skal se på CloudWatch alarmer    
 
@@ -54,11 +55,8 @@ THEREBEDRAGONS
 Se at Det blir opprettet et Dashboard
 
 * Når du kjører plan- eller apply vil Terraform spørre deg om ditt studentnavn. 
-* Hvordan kan du sende variabelverdier 
-direkte i terraform kommandolinjen?
-
-* Lag en Defaultverdi for variabelen, se at du da også ikke blir bedt om å oppgi studentnavn på ```plan/apply```   
-
+* Hvordan kan du sende variabelverdier direkte i terraform kommandolinjen?
+* Lag en Defaultverdi for variabelen, se at du da også ikke blir bedt om å oppgi studentnavn på ```plan/apply```
 * Kjør Terraform  init / plan / apply from Cloud9-miljøet ditt
 
 ## Se på Spring Boot appen 
@@ -72,7 +70,7 @@ direkte i terraform kommandolinjen?
                 b -> b.values().size()).register(meterRegistry);
     }
 ```
-Denne lager en Ny metric - av typen Gauge, som hele tiden rapporterer hvor mange bank-kontoer som eksisterer i systemet 
+Denne lager en Ny metric - av typen Gauge. Hver gang data sendes til CloudWatch leses denne av og vil rapportere hvor mange bank-kontoer som eksisterer i systemet 
 
 ## Endre MetricConfig klasse
 
@@ -150,12 +148,12 @@ Det skal se omtrent slik ut
 
 # Gauge for banken sin totale sum
 
-Siden vi bare tilbyr overfløringer mellom konto, skal denne summen være 0. Når penger går inn på en konto, skal de også gå ut av en annen!
+Under normale forhold kal denne summen være 0. Når penger går inn på en konto, skal de også gå ut av en annen!
 Banken må kunne bevise at summen hele tiden er 0, og vi vil derfor lage en metric for dette i koden
 
 Du skal nå lage en Micrometer ```Gauge``` som viser nettobeholdningen til banken. 
 
-Plasser denne på riktig sted i koden. 
+TODO: Plasser denne på riktig sted i koden. 
 
 ```java
 // Denne meter-typen "Gauge" rapporterer hvor mye penger som totalt finnes i banken
@@ -171,6 +169,7 @@ Gauge.builder("bank_sum", theBank,
 ## Lag en ny Widget CloudWatch Dashboardet 
 
 Utvid Terraformkoden slik at den viser en ekstra widget for metrikken ```bank_sum```
+Hint: du må endre på X/Y verdiene for at de ikke skal overlappe!
 
 ## Cloudwatch Alarm
 
@@ -180,7 +179,8 @@ Dette kan vi gjøre ved å lage en CloudWatch alarm.
 Hvis noe skal skje når en alarm løses ut, kan vi få den til å sende en meldng til en SNS topic.
 Vi kan så lage en "subscription" på denne Topicen som får meldinger som sendes til den. 
 
-Lag en ny terraform fil med følgende innhold. Husk å endre på e-postaddressen 
+Lag en ny terraform fil i samme katalog som de andre med følgende innhold. Husk å endre på e-postaddressen 
+Du kan kalle filen hva du vil, Husk at terraform prosesserer alle ```*.tf``` filer i katalogen du starter i - uavhengig av filnavn
 
 ```hcl
 
@@ -213,13 +213,33 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
 
 ```
 
-Litt forklaring 
+### Litt forklaring 
 
-* Namespace er studentnavnet ditt, skal ikke være glennbech
+* Namespace er studentnavnet ditt, skal ikke være glennbech! Det finner du igjen i CloudWatch Metrics
 * Det finnes en lang rekke ```comparison_operator``` alternativer
-* ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spiks" eller uteliggende observasjoner. 
+* ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner. 
 * ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening  
 * Legg merke til hvordan en ````resource``` refererer til en annen i Terraform!
+
+
+### Løs ut alarmen! 
+
+* Forsøk å endre en konto sin saldo uten å gjøre en overfløring, dette vil gi en balanse i banken sin totale saldo ulik 0!
+
+For eksmpel ;
+```sh
+curl --location --request POST 'http://localhost:8080/account' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": 999,
+    "balance" : "50000"
+}'|jq
+```
+
+* Sjekk at alarmen går 
+* Gå til CloudWatch Alarms i AWS og se at alarmen sin tilstand er ```IN_ALARM```
+* Få balansen i banken tilbake til 0 
+* Se at alarmen sin tilstand går vekk fra ```IN_ALARM``` . 
 
 ## Terraform pipeline i GitHub actions 
 
