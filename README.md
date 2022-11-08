@@ -166,7 +166,7 @@ Gauge.builder("bank_sum", theBank,
         .register(meterRegistry);
 ```
 
-## Lag en ny Widget CloudWatch Dashboardet 
+## Lag en ny Widget i CloudWatch Dashboardet 
 
 Utvid Terraformkoden slik at den viser en ekstra widget for metrikken ```bank_sum```
 Hint: du må endre på X/Y verdiene for at de ikke skal overlappe!
