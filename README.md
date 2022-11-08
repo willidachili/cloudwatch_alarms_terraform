@@ -14,7 +14,8 @@ Logg på Cloud 9 miljøet ditt som vanlig
 
 ## Bruk Terraform til å lage et CloudWatch DashBoard 
 
-* Klon (Ikke fork) dette repoet til Cloud9 miljøet ditt.  Se i katalogen "infra" - her finner dere filen *dashboard.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
+* Lag en Fork av dette repoet til Cloud9 miljøet ditt.  Se i katalogen "infra" - her finner dere filen *dashboard.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
+* Du trenger å lage en fork, i din egen GitHub Konto, fordi du skal lage egne repository secrets osv når du skal lage en GitHub Actions workflow senere. 
 
 * Som dere ser beskrives dashboardet i et JSON-format. Her finner dere dokumentasjon https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/CloudWatch-Dashboard-Body-Structure.html
 * Her ser dere også hvordan man ofte inkluderer tekst eller kode ved hjelp av  "Heredoc" syntaks i Terraformkode, slik at vi ikke trenger å tenke på "newline", "Escaping" av spesialtegn osv (https://developer.hashicorp.com/terraform/language/expressions/strings)
@@ -52,7 +53,10 @@ THEREBEDRAGONS
 ## TODO 
 
 * Skriv en *provider.tf* i samme katalog som dashboard.tf - og kjør terraform plan / apply fra Cloud 9 miljøet ditt
-Se at Det blir opprettet et Dashboard
+* Se gjerne på https://github.com/glennbechdevops/terraform-app-runner - for inspirasjon
+* Se at Det blir opprettet et Dashboard
+
+### Variabler i Terraform 
 
 * Når du kjører plan- eller apply vil Terraform spørre deg om ditt studentnavn. 
 * Hvordan kan du sende variabelverdier direkte i terraform kommandolinjen?
@@ -176,7 +180,7 @@ Hint: du må endre på X/Y verdiene for at de ikke skal overlappe!
 Vi vil lage en Alarm som utløses dersom banken sin totale sum overstiger 0. 
 Dette kan vi gjøre ved å lage en CloudWatch alarm.
 
-Hvis noe skal skje når en alarm løses ut, kan vi få den til å sende en meldng til en SNS topic.
+Hvis noe skal skje når en alarm løses ut, kan vi få den til å sende en melding til en SNS topic.
 Vi kan så lage en "subscription" på denne Topicen som får meldinger som sendes til den. 
 
 Lag en ny terraform fil i samme katalog som de andre med følgende innhold. 
@@ -267,6 +271,14 @@ for Terraform-koden i dette repositoryet slik at
 * For en Pull request, gjør bare Terraform plan 
 
 Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform!
+
+## Rydd opp etter deg plz
+
+Kjør ```Terraform destroy``` fra Cloud 9, eller lag en "cleanup.yml" workflow 
+
+
+
+
 
 ## Ekstrapppgaver
 
