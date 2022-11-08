@@ -222,8 +222,8 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
 * Det finnes en lang rekke ```comparison_operator``` alternativer
 * ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner. 
 * ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening  
-* Legg merke til hvordan en ````resource``` refererer til en annen i Terraform!
-
+* Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
+* Terraform lager både en SNS Topic og en email subscription. 
 
 ### Bekreft Epost
 
